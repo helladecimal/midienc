@@ -5,7 +5,6 @@ MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
 
 def event_enc(data):
-    print(hex(data[1]))
     event_data = b""
 
     for i in range(0, len(data)-1):
