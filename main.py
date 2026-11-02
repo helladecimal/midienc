@@ -27,8 +27,8 @@ def encode(file_data):
 
 
 
-file = Path("test.txt").read_bytes()
-midi = encode(file)
+file = Path("test.txt")
+midi = encode(file.read_bytes())
 
 with open(f"{file.name}.mid", "wb") as f:
     f.write(midi)
