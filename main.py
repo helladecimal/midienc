@@ -5,7 +5,7 @@ MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
 
 def event_enc(data):
-    event_data = b""
+    event_data = bytearray()
     
     for i in range(0, len(data)):
 
@@ -14,24 +14,23 @@ def event_enc(data):
 
         vel = (data[i+1]).to_bytes(1, "big", signed=False) if i+1 < len(data) else b'\xFF' 
 
-        event_data += (
-            (1).to_bytes(1, "big", signed=False) + 
-            b"\x90" + 
-            pitch +
+        event_data.extend([
+            (1).to_bytes(1, "big", signed=False), 
+            b"\x90",
+            pitch,
             vel
-        )
+        ])
 
         
 
-        event_data = (
-            event_data + 
-            (1).to_bytes(1, "big", signed=False) + 
-            b"\x80" + 
-            pitch + 
+        event_data.extend([
+            (1).to_bytes(1, "big", signed=False),
+            b"\x80",
+            pitch,
             b"\x00"
-        )
+        ])
 
-    event_data = event_data + b"\xFF\x2F\x00"
+    event_data.append(b"\xFF\x2F\x00")
 
     event_len = len(event_data)
     return event_data, event_len
