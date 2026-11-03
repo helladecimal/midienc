@@ -7,4 +7,4 @@ name = "midi-enc"
 version = "1.0.0"
 
 [project.scripts]
-midi-enc = "main:main"
+midi-enc = "main:__main__"

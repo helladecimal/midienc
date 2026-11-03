@@ -97,7 +97,7 @@ def revert(file):
     with open(f"{new}", "wb") as f:
         f.write(data)
 
-def main():
+def __main__():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("file", type=Path)
