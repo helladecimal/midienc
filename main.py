@@ -8,7 +8,6 @@ def event_enc(data):
     event_data = b""
     
     for i in range(0, len(data)):
-        print(hex(data[i]))
 
         pitch = (data[i]).to_bytes(1, "big", signed=False)
         vel = b""
@@ -98,5 +97,5 @@ def revert(file):
     with open(f"{new}", "wb") as f:
         f.write(data)
 
-#convert(Path("test1.txt"))
-revert(Path("test1.txt.mid"))
+#convert(Path("whats_a_midi_file.mp4"))
+revert(Path("whats_a_midi_file1.mp4.mid"))
