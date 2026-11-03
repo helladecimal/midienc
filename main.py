@@ -38,19 +38,19 @@ def encode(file_data):
         (6).to_bytes(4, "big", signed=False) + 
         (0).to_bytes(2, "big", signed=False) + 
         (1).to_bytes(2, "big", signed=False) + 
-        (0).to_bytes(2, "big", signed=False) + 
         (100).to_bytes(2, "big", signed=False)
     )
 
     track_chunk = (
         MIDI_TRK + 
         (event_len).to_bytes(4, "big", signed=False) + 
-        event_data
+        event_data +
+        b"\xFF\x2F\x00"
     )
 
     print(list(track_chunk))
 
-    return header_chunk + track_chunk + b"\xFF" + b"\x2F" + b"\x00"
+    return header_chunk + track_chunk
 
 
 
