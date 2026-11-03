@@ -28,7 +28,6 @@ def event_enc(data):
     event_data = event_data + b"\xFF\x2F\x00"
 
     event_len = len(event_data)
-    print(event_len)
     return event_data, event_len
 
 def encode(file_data):
@@ -52,9 +51,9 @@ def encode(file_data):
     return header_chunk + track_chunk
 
 def decode(file_data):
-    # 10 byte header
-    event_data = file_data[{10 + len(MIDI_TRK) + 4}:]
-    print(list(event_data))
+    # 4 byte header + 4 length + 6 format + 4 ascii + 4 byte
+    event_data = file_data[22:]
+    print(event_data)
 
 
 def convert(file):
