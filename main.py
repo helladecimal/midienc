@@ -54,9 +54,12 @@ def encode(file_data):
     return header_chunk + track_chunk
 
 
+def convert(file):
+    file = Path("test.txt")
+    midi = encode(file.read_bytes())
 
-file = Path("test.txt")
-midi = encode(file.read_bytes())
+    with open(f"{file.name}.mid", "wb") as f:
+        f.write(midi)
 
-with open(f"{file.name}.mid", "wb") as f:
-    f.write(midi)
+def revert(file):
+    pass
