@@ -30,6 +30,8 @@ def event_enc(data):
             b"\x00"
         ])
 
+        print(f"{int(i/len(event_data))}% done")
+
     event_data.append(b"\xFF\x2F\x00")
 
     event_len = len(event_data)
