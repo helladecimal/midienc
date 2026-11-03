@@ -10,10 +10,10 @@ def event_enc(data):
     
     for i in range(0, len(data)):
 
-        pitch = (data[i])
-        vel = 0
+        pitch = (data[i]) & 0x7f
+        vel = (data[i] >> 7) & 0x01
 
-        vel = (data[i+1]) if i+1 < len(data) else 0xFF
+        #vel = (data[i+1]) if i+1 < len(data) else 0xFF
 
         event_data.extend([
             1,
