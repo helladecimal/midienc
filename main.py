@@ -30,7 +30,7 @@ def event_enc(data):
             0x00
         ])
 
-        print(f"{int( (i/len(data)) * 100)}% done", end="")
+        print(f"{int( (i/len(data)) * 100)}% done\r")
 
     event_data.extend([0xFF, 0x2F, 0x00])
 
@@ -58,7 +58,7 @@ def decode(file_data):
         if i+4 >= len(event_data) and len(event_data) % 2 == 1:
             decoded_data.append(vel)
 
-        print(f"{int((i/len(file_data)) * 100)}% done", end="")
+        print(f"{int((i/len(file_data)) * 100)}% done\r")
 
     decoded_data = bytes(decoded_data)
 
