@@ -12,10 +12,7 @@ def event_enc(data):
         pitch = (data[i]).to_bytes(1, "big", signed=False)
         vel = b""
 
-        if i+1 < len(data):
-            vel = (data[i+1]).to_bytes(1, "big", signed=False)
-        else:
-            vel = b'\xFF'
+        vel = (data[i+1]).to_bytes(1, "big", signed=False) if i+1 < len(data) else b'\xFF' 
 
         event_data += (
             (1).to_bytes(1, "big", signed=False) + 
