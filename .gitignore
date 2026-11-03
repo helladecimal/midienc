@@ -2,3 +2,5 @@
 *.mid
 *.txt
 test1.txt
+__pycache__/
+midi_enc.egg-info/
