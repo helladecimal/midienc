@@ -1,5 +1,6 @@
 import hashlib, math, struct
 from pathlib import Path
+import argparse
 
 MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
@@ -20,7 +21,6 @@ def event_enc(data):
             pitch,
             vel
         ])
-
         
 
         event_data.extend([
