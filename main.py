@@ -58,7 +58,7 @@ def decode(file_data):
                 pitch
             )
 
-        if i+4 >= len(event_data):
+        if i+4 >= len(event_data) and len(event_data) % 2 == 1:
             decoded_data += vel
 
         print(pitch, vel, i, len(event_data))
