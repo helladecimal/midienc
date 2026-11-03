@@ -1,4 +1,4 @@
-('C:\\Users\\hecka\\Documents\\proj\\midienc\\build\\main\\PYZ-00.pyz',
+('C:\\Users\\hecka\\Documents\\proj\\midienc\\build\\midi-enc\\PYZ-00.pyz',
  [('__future__',
    'C:\\Users\\hecka\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\__future__.py',
    'PYMODULE'),
