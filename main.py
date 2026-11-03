@@ -97,19 +97,20 @@ def revert(file):
     with open(f"{new}", "wb") as f:
         f.write(data)
 
-parser = argparse.ArgumentParser()
+def main():
+    parser = argparse.ArgumentParser()
 
-parser.add_argument("file", type=Path)
-parser.add_argument("-e", "--encode", action="store_true")
-parser.add_argument("-d", "--decode", action="store_true")
+    parser.add_argument("file", type=Path)
+    parser.add_argument("-e", "--encode", action="store_true")
+    parser.add_argument("-d", "--decode", action="store_true")
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-if args.file and args.file.exists():
-    if args.encode:
-        convert(args.file)
-    if args.decode:
-        revert(args.file)
-else:
-    print("invalid file")
+    if args.file and args.file.exists():
+        if args.encode:
+            convert(args.file)
+        if args.decode:
+            revert(args.file)
+    else:
+        print("invalid file")
 
