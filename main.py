@@ -49,9 +49,12 @@ def encode(file_data):
         event_data 
     )
 
-    print(list(track_chunk))
-
     return header_chunk + track_chunk
+
+def decode(file_data):
+    # 10 byte header
+    event_data = file_data[{10 + len(MIDI_TRK) + 4}:]
+    print(list(event_data))
 
 
 def convert(file):
@@ -62,4 +65,5 @@ def convert(file):
         f.write(midi)
 
 def revert(file):
-    pass
+    file = Path("test.txt.mid")
+    decode(file.read_bytes())
