@@ -9,14 +9,14 @@ def event_enc(data):
     
     for i in range(0, len(data)):
 
-        pitch = (data[i]).to_bytes(1, "big", signed=False)
-        vel = b""
+        pitch = (data[i])
+        vel = 0
 
-        vel = (data[i+1]).to_bytes(1, "big", signed=False) if i+1 < len(data) else b'\xFF' 
+        vel = (data[i+1]) if i+1 < len(data) else 0xFF
 
         event_data.extend([
-            (1).to_bytes(1, "big", signed=False), 
-            b"\x90",
+            1,
+            0x90,
             pitch,
             vel
         ])
@@ -24,15 +24,17 @@ def event_enc(data):
         
 
         event_data.extend([
-            (1).to_bytes(1, "big", signed=False),
-            b"\x80",
+            1,
+            0x80,
             pitch,
-            b"\x00"
+            0x00
         ])
 
         print(f"{int(i/len(event_data))}% done")
 
-    event_data.append(b"\xFF\x2F\x00")
+    event_data.extend([0xFF, 0x2F, 0x00])
+
+    event_data = bytes(event_data)
 
     event_len = len(event_data)
     return event_data, event_len
@@ -46,17 +48,19 @@ def decode(file_data):
 
     for i in range(0, len(event_data), 4):
 
-        note_stat = (event_data[i+1]).to_bytes(1, "big", signed=False)
-        pitch = (event_data[i+2]).to_bytes(1, "big", signed=False)
-        vel = (event_data[i+3-4]).to_bytes(1, "big", signed=False)
+        note_stat = (event_data[i+1])
+        pitch = (event_data[i+2])
+        vel = (event_data[i+3-4])
 
-        if note_stat == b'\x90': # note on
+        if note_stat == 0x90: # note on
             decoded_data.append(pitch)
 
         if i+4 >= len(event_data) and len(event_data) % 2 == 1:
             decoded_data.append(vel)
 
         print(f"{int(i/len(event_data))}% done")
+
+    decoded_data = bytes(decoded_data)
 
     return decoded_data
 
