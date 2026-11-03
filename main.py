@@ -53,7 +53,9 @@ def encode(file_data):
 def decode(file_data):
     # 4 byte header + 4 length + 6 format + 4 ascii + 4 byte
     event_data = file_data[22:]
-    print(event_data)
+    event_data = event_data[:len(event_data)-3] # 3 byte eof
+    return event_data
+
 
 
 def convert(file):
@@ -64,5 +66,9 @@ def convert(file):
         f.write(midi)
 
 def revert(file):
-    file = Path("test.txt.mid")
-    decode(file.read_bytes())
+    data = decode(file.read_bytes())
+
+    with open(f"{file.name}", "wb") as f:
+        f.write(data)
+
+revert(Path("test.txt.mid"))
