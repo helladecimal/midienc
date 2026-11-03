@@ -66,10 +66,10 @@ def encode(file_data):
 
     header_chunk = (
         MIDI_HEADER + 
-        (6).to_bytes(4, "big", signed=False) + 
-        (0).to_bytes(2, "big", signed=False) + 
-        (1).to_bytes(2, "big", signed=False) + 
-        (100).to_bytes(2, "big", signed=False)
+        (6).to_bytes(4, "big", signed=False) + # length
+        (0).to_bytes(2, "big", signed=False) + # format
+        (1).to_bytes(2, "big", signed=False) + # tracks
+        (5).to_bytes(2, "big", signed=False) # divisions
     )
     
     track_chunk = (
@@ -93,5 +93,5 @@ def revert(file):
     with open(f"{new}", "wb") as f:
         f.write(data)
 
-#convert(Path("whats_a_midi_file.mp4"))
-revert(Path("whats_a_midi_file1.mp4.mid"))
+convert(Path("whats_a_midi_file2.mp4"))
+#revert(Path("whats_a_midi_file1.mp4.mid"))
