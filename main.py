@@ -115,5 +115,3 @@ def __main__():
             revert(args.file)
     else:
         print("invalid file")
-
-__main__()
