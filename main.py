@@ -25,6 +25,8 @@ def event_enc(data):
             b"\x00"
         )
 
+    event_data = event_data + b"\xFF\x2F\x00"
+
     event_len = len(event_data)
     print(event_len)
     return event_data, event_len
@@ -40,12 +42,11 @@ def encode(file_data):
         (1).to_bytes(2, "big", signed=False) + 
         (100).to_bytes(2, "big", signed=False)
     )
-
+    
     track_chunk = (
         MIDI_TRK + 
         (event_len).to_bytes(4, "big", signed=False) + 
-        event_data +
-        b"\xFF\x2F\x00"
+        event_data
     )
 
     print(list(track_chunk))
