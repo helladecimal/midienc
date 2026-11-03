@@ -19,7 +19,7 @@ def event_enc(data):
             1,
             0x90,
             pitch,
-            vel
+            vel * 0x7F
         ])
         
 
@@ -48,15 +48,17 @@ def decode(file_data):
 
     for i in range(0, len(event_data), 4):
 
+        if i+3 >= len(event_data):
+            break
+
         note_stat = (event_data[i+1])
         pitch = (event_data[i+2])
-        vel = (event_data[i+3-4])
+        vel = (event_data[i+3])
+
+        bit8 = 1 if vel > 64 else 0
 
         if note_stat == 0x90: # note on
-            decoded_data.append(pitch)
-
-        if i+4 >= len(event_data) and len(event_data) % 2 == 1:
-            decoded_data.append(vel)
+            decoded_data.append((pitch | (bit8 << 7)))
 
         print(f"{int((i/len(file_data)) * 100)}% done", end="\r")
 
@@ -114,3 +116,4 @@ def __main__():
     else:
         print("invalid file")
 
+__main__()
