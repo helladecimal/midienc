@@ -46,7 +46,7 @@ def encode(file_data):
     track_chunk = (
         MIDI_TRK + 
         (event_len).to_bytes(4, "big", signed=False) + 
-        event_data
+        event_data 
     )
 
     print(list(track_chunk))
