@@ -42,7 +42,7 @@ def decode(file_data):
     event_data = file_data[22:]
     event_data = event_data[:len(event_data)-3] # 3 byte eof
 
-    decoded_data = b""
+    decoded_data = bytearray()
 
     for i in range(0, len(event_data), 4):
 
@@ -51,14 +51,12 @@ def decode(file_data):
         vel = (event_data[i+3-4]).to_bytes(1, "big", signed=False)
 
         if note_stat == b'\x90': # note on
-            decoded_data += (
-                pitch
-            )
+            decoded_data.append(pitch)
 
         if i+4 >= len(event_data) and len(event_data) % 2 == 1:
-            decoded_data += vel
+            decoded_data.append(vel)
 
-        print(pitch, vel, i, len(event_data))
+        print(f"{int(i/len(event_data))}% done")
 
     return decoded_data
 
