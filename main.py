@@ -7,15 +7,16 @@ MIDI_TRK = b"MTrk"
 def event_enc(data):
     event_data = b""
     
-    for i in range(0, len(data)-1):
+    for i in range(0, len(data), 2):
         print(hex(data[i]))
-        event_data = (
-            event_data + 
+        event_data += (
             (1).to_bytes(1, "big", signed=False) + 
             b"\x90" + 
-            (data[i]).to_bytes(1, "big", signed=False) + 
-            (data[i+1]).to_bytes(1, "big", signed=False)
+            (data[i]).to_bytes(1, "big", signed=False)
         )
+
+        if i+1 < len(data):
+            event_data += (data[i+1]).to_bytes(1, "big", signed=False)
 
         event_data = (
             event_data + 
@@ -37,9 +38,16 @@ def decode(file_data):
 
     decoded_data = b""
 
-    for i in range(0, len(event_data)):
-        if i%4 > 1 and (event_data[i-1]).to_bytes(1, "big", signed=False) == b'\x90':
-            decoded_data = decoded_data + (event_data[i]).to_bytes(1, "big", signed=False)
+    for i in range(0, len(event_data), 4):
+
+        note_stat = (event_data[i+1]).to_bytes(1, "big", signed=False)
+        pitch = (event_data[i+2]).to_bytes(1, "big", signed=False)
+        vel = (event_data[i+3]).to_bytes(1, "big", signed=False)
+
+        if note_stat == b'\x90': # note on
+            decoded_data += (
+                pitch
+            )
 
     return decoded_data
 
