@@ -8,10 +8,11 @@
 > [!NOTE]  
 > midi files generated with this program *may* not run on certain midi players
 
-> [!NOTE]  
+> [!WARNING]  
 > this is not compression by any means.  
 > generated files can be way bigger than the original.   
-> demo file increased by 9x (1.1 mb -> 8.99 mb)
+> demo file increased by 9x (1.1 mb -> 8.99 mb).  
+> basically, just dont try anything bigger than a few megabytes...
 
 ## how to install
 
