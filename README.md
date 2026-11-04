@@ -6,13 +6,22 @@
 </div>
 
 > [!NOTE]  
-> midi files generated with this program *may* not run on certain midi players
+> [midi files generated with this program *may* not run on certain midi players](#compatibility)
 
 > [!WARNING]  
 > this is not compression by any means.  
 > generated files can be way bigger than the original.   
 > demo file increased by 9x (1.1 mb -> 8.99 mb).  
-> basically, just dont try anything bigger than a few megabytes...
+> basically, just dont try anything bigger than a few megabytes...  
+>  
+> also please dont treat this like a secure encryption method..........
+
+## faq
+
+- ### ANY file?  
+    yes! files are just bytes, this program just puts those bytes in a format that midi players can understand.
+- ### can i convert existing midis?
+    sadly not right now, but i am planning to implement it once i figure how to do multi-track encoding
 
 ## how to install
 
