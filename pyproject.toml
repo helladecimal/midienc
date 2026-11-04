@@ -7,4 +7,7 @@ name = "midi-enc"
 version = "1.0.0"
 
 [project.scripts]
-midi-enc = "main:__main__"
+midi-enc = "main:main"
+
+[tool.setuptools]
+py-modules = ["main"]

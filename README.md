@@ -50,6 +50,8 @@ midi-enc -e (file)
 midi-enc -d (midi)
 ```
 
+as an example, try to decode the `decode-me.txt.mid` file in the repo!
+
 ## compatibility
 
 <div align="center">
