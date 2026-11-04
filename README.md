@@ -1,12 +1,7 @@
 
 <div align="center" style="text-align: center;">
     <h1>midi-enc</h1>
-    <div style="display:flex; gap: 10px; align-items:center; justify-content:center;">
-        <img src="img/screenshot.png" height="200">
-        <video height="200" controls>
-            <source src="img/demo.mp4" type="video/mp4">
-        </video>
-    </div>
+    <img src="img/screenshot.png" height="400">
     <p>convert any file type into a midi file with one simple trick</p>
 </div>
 
