@@ -91,6 +91,7 @@ def convert(file):
 
     with open(f"{file.name}.mid", "wb") as f:
         f.write(midi)
+    print("done converting")
 
 def revert(file):
     data = decode(file.read_bytes())
@@ -98,6 +99,7 @@ def revert(file):
     new = file.name[:-4] # remove .mid
     with open(f"{new}", "wb") as f:
         f.write(data)
+    print("done reverting")
 
 def main():
     parser = argparse.ArgumentParser()
