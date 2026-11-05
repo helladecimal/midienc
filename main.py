@@ -86,17 +86,26 @@ def encode(file_data):
 
     return header_chunk + track_chunk
 
-def convert(file):
+def convert(file, output):
     midi = encode(file.read_bytes())
 
-    with open(f"{file.name}.mid", "wb") as f:
+    if not output:
+        new = file.name
+    else:
+        new = output.name
+
+    with open(f"{new}.mid", "wb") as f:
         f.write(midi)
     print("done converting")
 
-def revert(file):
+def revert(file, output):
     data = decode(file.read_bytes())
 
-    new = file.name[:-4] # remove .mid
+    if not output:
+        new = file.name[:-4] # remove .mid
+    else:
+        new = output.name
+
     with open(f"{new}", "wb") as f:
         f.write(data)
     print("done reverting")
@@ -107,15 +116,16 @@ def main():
     parser.add_argument("file", type=Path)
     parser.add_argument("-e", "--encode", action="store_true")
     parser.add_argument("-d", "--decode", action="store_true")
+    parser.add_argument("-o", "--output", type=Path)
 
     args = parser.parse_args()
 
     if args.file and args.file.exists():
         if args.encode:
-            convert(args.file)
+            convert(args.file, args.output)
         if args.decode:
             if args.file.name[-4:] == ".mid":
-                revert(args.file)
+                revert(args.file, args.output)
             else:
                 print("file is not a midi file")
     else:
