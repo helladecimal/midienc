@@ -113,8 +113,8 @@ def encode(file_data, inst):
 
     return header_chunk + track_chunk
 
-def convert(file, output):
-    midi = encode(file.read_bytes())
+def convert(file, output, inst):
+    midi = encode(file.read_bytes(), inst)
 
     if not output:
         new = file.name
@@ -125,7 +125,7 @@ def convert(file, output):
         f.write(midi)
     print("done converting")
 
-def revert(file, output):
+def revert(file, output, inst):
     data = decode(file.read_bytes())
 
     if not output:
