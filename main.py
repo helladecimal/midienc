@@ -117,15 +117,16 @@ def main():
     parser.add_argument("-e", "--encode", action="store_true")
     parser.add_argument("-d", "--decode", action="store_true")
     parser.add_argument("-o", "--output", type=Path)
+    parser.add_argument("-I", "--inst", type=int)
 
     args = parser.parse_args()
 
     if args.file and args.file.exists():
         if args.encode:
-            convert(args.file, args.output)
+            convert(args.file, args.output, args.inst if args.inst else 1)
         if args.decode:
             if args.file.name[-4:] == ".mid":
-                revert(args.file, args.output)
+                revert(args.file, args.output, args.inst if args.inst else 1)
             else:
                 print("file is not a midi file")
     else:
