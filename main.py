@@ -149,7 +149,7 @@ def main():
     args = parser.parse_args()
 
     if args.file and args.file.exists():
-        inst = args.inst if args.inst > 1 else 1
+        inst = args.inst if args.inst else 1
 
         if args.encode:
             convert(args.file, args.output, inst)
