@@ -83,39 +83,35 @@ def decode(file_data):
 
 def encode(file_data, inst):
 
-    header_chunk = b""
-
-    header_chunk.extend([
+    header_chunk = [
         MIDI_HEADER,
         (6).to_bytes(4, "big", signed=False), # length
         (0 if inst <= 1 else 1).to_bytes(2, "big", signed=False), # format
         (inst).to_bytes(2, "big", signed=False), # tracks
         (200).to_bytes(2, "big", signed=False) # ticks per beat
-    ])
+    ]
 
-    total_track = b""
+    total_track = []
 
     split_data = []
 
-    for i in range(inst):
+    for i in range(0, inst):
         div = len(file_data) // inst
-        split_data[i] = file_data[0:i*div]
+        split_data.append(file_data[0:i*div])
 
     for data_seg in split_data:
 
         event_data, event_len = event_enc(data_seg)
-
-
-        track_chunk = []
-        track_chunk.extend([
+        
+        track_chunk = [
             MIDI_TRK,
             (event_len).to_bytes(4, "big", signed=False), 
             event_data 
-        ])
+        ]
 
         total_track.append(track_chunk)
 
-    return header_chunk + track_chunk
+    return bytes(header_chunk) + bytes(total_track)
 
 def convert(file, output, inst):
     midi = encode(file.read_bytes(), inst)
