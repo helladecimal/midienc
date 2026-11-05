@@ -1,12 +1,15 @@
 import hashlib, math, struct
 from pathlib import Path
 import argparse
+import random
 
 MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
 
 def event_enc(data):
     event_data = bytearray()
+
+    event_data.extend([0x00, 0xC0, random.randint(0, 127)]) 
     
     for i in range(0, len(data)):
 
@@ -41,8 +44,11 @@ def event_enc(data):
 
 def decode(file_data):
     # 4 byte header + 4 length + 6 format + 4 ascii + 4 byte
-    event_data = file_data[22:]
+    event_data: bytearray = file_data[22:]
     event_data = event_data[:len(event_data)-3] # 3 byte eof
+
+    event_data.replace(b"")
+    
 
     decoded_data = bytearray()
 
