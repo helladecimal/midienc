@@ -83,13 +83,13 @@ def decode(file_data):
 
 def encode(file_data, inst):
 
-    header_chunk = bytearray(
+    header_chunk = bytearray([
         MIDI_HEADER,
         (6).to_bytes(4, "big", signed=False), # length
         (0 if inst <= 1 else 1).to_bytes(2, "big", signed=False), # format
         (inst).to_bytes(2, "big", signed=False), # tracks
         (200).to_bytes(2, "big", signed=False) # ticks per beat
-    )
+    ])
 
     total_track = bytearray()
 
@@ -103,11 +103,11 @@ def encode(file_data, inst):
 
         event_data, event_len = event_enc(data_seg)
         
-        track_chunk = bytearray(
+        track_chunk = bytearray([
             MIDI_TRK,
             (event_len).to_bytes(4, "big", signed=False), 
             event_data 
-        )
+        ])
 
         total_track.append(track_chunk)
 
