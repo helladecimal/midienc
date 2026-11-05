@@ -84,13 +84,17 @@ def encode(file_data, inst):
         div = len(file_data) // inst
         split_data[i] = file_data[0:i*div]
 
-    event_data, event_len = event_enc(file_data)
-    
-    track_chunk = (
-        MIDI_TRK + 
-        (event_len).to_bytes(4, "big", signed=False) + 
-        event_data 
-    )
+    for data_seg in split_data:
+
+        event_data, event_len = event_enc(data_seg)
+        
+        track_chunk = bytearray(
+            MIDI_TRK,
+            (event_len).to_bytes(4, "big", signed=False), 
+            event_data 
+        )
+
+        total_track.append(track_chunk)
 
     return header_chunk + track_chunk
 
