@@ -114,7 +114,10 @@ def main():
         if args.encode:
             convert(args.file)
         if args.decode:
-            revert(args.file)
+            if args.file.name[-4:] == ".mid":
+                revert(args.file)
+            else:
+                print("file is not a midi file")
     else:
         print("invalid file")
 
