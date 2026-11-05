@@ -44,7 +44,7 @@ def event_enc(data):
 
 def decode(file_data):
     # 4 byte header + 4 length + 6 format + 4 ascii + 4 byte
-    event_data: bytearray = file_data[22:]
+    event_data = file_data[22:]
     event_data = event_data[:len(event_data)-3] # 3 byte eof
 
     decoded_data = bytearray()
@@ -83,7 +83,9 @@ def decode(file_data):
 
 def encode(file_data, inst):
 
-    header_chunk = bytearray([
+    header_chunk = b""
+
+    header_chunk.extend([
         MIDI_HEADER,
         (6).to_bytes(4, "big", signed=False), # length
         (0 if inst <= 1 else 1).to_bytes(2, "big", signed=False), # format
@@ -91,7 +93,7 @@ def encode(file_data, inst):
         (200).to_bytes(2, "big", signed=False) # ticks per beat
     ])
 
-    total_track = bytearray()
+    total_track = b""
 
     split_data = []
 
@@ -102,8 +104,10 @@ def encode(file_data, inst):
     for data_seg in split_data:
 
         event_data, event_len = event_enc(data_seg)
-        
-        track_chunk = bytearray([
+
+
+        track_chunk = []
+        track_chunk.extend([
             MIDI_TRK,
             (event_len).to_bytes(4, "big", signed=False), 
             event_data 
