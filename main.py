@@ -47,10 +47,19 @@ def decode(file_data):
     event_data: bytearray = file_data[22:]
     event_data = event_data[:len(event_data)-3] # 3 byte eof
 
-    event_data.replace(b"")
-    
-
     decoded_data = bytearray()
+
+    for i in range(0, len(event_data)):
+        bytecheck = []
+        if i+1 < len(event_data):
+            bytecheck = [
+                event_data[i],
+                event_data[i+1]
+            ]
+
+        if bytecheck == [0x00, 0xc0]:
+            event_data.pop(i)
+            event_data.pop(i+1)
 
     for i in range(0, len(event_data), 4):
 
