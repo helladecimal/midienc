@@ -42,12 +42,16 @@
 
 ### file -> .mid
 ```
-midi-enc -e (file)
+midi-enc -e (file) # will return filename.type.mid
+
+midi-enc -e (file) -o midifile # will return midifile.mid
 ```
 
 ### .mid -> file
 ```
-midi-enc -d (midi)
+midi-enc -d (midi) # will return filename.type
+
+midi-enc -d (midi) -o name # will return name ***you must provide type!!***
 ```
 
 as an example, try to decode the `decode-me.txt.mid` file in the repo!
