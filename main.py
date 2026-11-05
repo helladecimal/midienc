@@ -78,6 +78,12 @@ def encode(file_data, inst):
 
     total_track = bytearray()
 
+    split_data = []
+
+    for i in range(inst):
+        div = len(file_data) // inst
+        split_data[i] = file_data[0:i*div]
+
     event_data, event_len = event_enc(file_data)
     
     track_chunk = (
