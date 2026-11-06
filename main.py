@@ -103,11 +103,11 @@ def encode(file_data, inst):
 
         event_data, event_len = event_enc(data_seg)
         
-        track_chunk = [
-            MIDI_TRK,
-            (event_len).to_bytes(4, "big", signed=False), 
+        track_chunk = (
+            MIDI_TRK +
+            (event_len).to_bytes(4, "big", signed=False) +
             event_data 
-        ]
+        )
 
         total_track += track_chunk
 
