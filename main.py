@@ -6,7 +6,7 @@ import random
 MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
 
-def event_enc(data, chan):
+def event_enc(data, chan, delta):
     event_data = bytearray()
 
     event_data.extend([0x00, 0xC0 | chan, random.randint(0, 119)]) 
@@ -27,7 +27,7 @@ def event_enc(data, chan):
         
 
         event_data.extend([
-            10,
+            delta,
             0x80 | chan,
             pitch,
             0x00
@@ -70,7 +70,7 @@ def decode(file_data):
 
     return decoded_data
 
-def encode(file_data, inst):
+def encode(file_data, inst, delta):
 
     header_chunk = (
         MIDI_HEADER +
@@ -96,7 +96,7 @@ def encode(file_data, inst):
 
         data_seg = split_data[i]
 
-        event_data, event_len = event_enc(data_seg, i)
+        event_data, event_len = event_enc(data_seg, i, delta)
         
         track_chunk = (
             MIDI_TRK +
@@ -108,8 +108,8 @@ def encode(file_data, inst):
 
     return header_chunk + total_track
 
-def convert(file, output, inst):
-    midi = encode(file.read_bytes(), inst)
+def convert(file, output, inst, delta):
+    midi = encode(file.read_bytes(), inst, delta)
     if not output:
         new = file.name
     else:
@@ -139,14 +139,16 @@ def main():
     parser.add_argument("-d", "--decode", action="store_true")
     parser.add_argument("-o", "--output", type=Path)
     parser.add_argument("-I", "--inst", type=int)
+    parser.add_argument("-d", "--delta", type=int)
 
     args = parser.parse_args()
 
     if args.file and args.file.exists():
         inst = args.inst if args.inst else 1
+        delta = args.delta if args.delta else 5
 
         if args.encode:
-            convert(args.file, args.output, inst)
+            convert(args.file, args.output, inst, delta)
         if args.decode:
             if args.file.name[-4:] == ".mid":
                 revert(args.file, args.output, inst)
