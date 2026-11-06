@@ -43,12 +43,20 @@ def event_enc(data, chan, delta):
     event_len = len(event_data)
     return event_data, event_len
 
-def decode(file_data):
-    # 4 byte header + 4 length + 6 format + 4 ascii + 4 byte
-    event_data = file_data[22:]
-    event_data = event_data[3:len(event_data)-4] # program change, 4 byte eof
 
+def decode(file_data):
+    # 4 byte header + 4 length + 2 format + 2 tracks + 2 div + 4 ascii + 4 byte
+    tracks = int.from_bytes(file_data[10:12], "big", signed=False)
+    #event_data = file_data[22:]
+    #event_data = event_data[3:len(event_data)-4] # program change, 4 byte eof
+    event_data = bytearray()
     decoded_data = bytearray()
+
+    trk_start = 14
+    for i in range(tracks):
+        len = int.from_bytes(file_data[trk_start+4:trk_start+8])
+
+
 
     for i in range(0, len(event_data), 4):
 
