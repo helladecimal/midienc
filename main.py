@@ -73,7 +73,7 @@ def decode(file_data):
 
         bit8 = 1 if vel > 32 else 0
 
-        if note_stat == 0x90: # note on
+        if (note_stat & 0xF0) == 0x90: # note on for any channel
             decoded_data.append((pitch | (bit8 << 7)))
 
         print(f"decoding: {int((i/len(file_data)) * 100)}% done", end="\r")
