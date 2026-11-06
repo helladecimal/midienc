@@ -6,10 +6,10 @@ import random
 MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
 
-def event_enc(data):
+def event_enc(data, chan):
     event_data = bytearray()
 
-    event_data.extend([0x00, 0xC0, random.randint(0, 127)]) 
+    event_data.extend([0x00, 0xC0 | chan, random.randint(0, 127)]) 
     
     for i in range(0, len(data)):
 
@@ -20,15 +20,15 @@ def event_enc(data):
 
         event_data.extend([
             1,
-            0x90,
+            0x90 | chan,
             pitch,
-            vel * 0x7F
+            vel * 0x7F if vel > 64 else vel
         ])
         
 
         event_data.extend([
-            1,
-            0x80,
+            10,
+            0x80 | chan,
             pitch,
             0x00
         ])
@@ -45,22 +45,9 @@ def event_enc(data):
 def decode(file_data):
     # 4 byte header + 4 length + 6 format + 4 ascii + 4 byte
     event_data = file_data[22:]
-    event_data = event_data[:len(event_data)-3] # 3 byte eof
+    event_data = event_data[3:len(event_data)-4] # program change, 4 byte eof
 
     decoded_data = bytearray()
-
-    for i in range(0, len(event_data)):
-        bytecheck = []
-        if i+2 < len(event_data):
-            bytecheck = [
-                event_data[i],
-                event_data[i+1]
-            ]
-
-        if bytecheck == [0x00, 0xc0]:
-            event_data.pop(i)
-            event_data.pop(i+1)
-            event_data.pop(i+2)
 
     for i in range(0, len(event_data), 4):
 
@@ -77,6 +64,7 @@ def decode(file_data):
             decoded_data.append((pitch | (bit8 << 7)))
 
         print(f"decoding: {int((i/len(file_data)) * 100)}% done", end="\r")
+        print("")
 
     decoded_data = bytes(decoded_data)
 
@@ -100,9 +88,11 @@ def encode(file_data, inst):
         div = len(file_data) // inst
         split_data.append(file_data[0:i*div])
 
-    for data_seg in split_data:
+    for i in range(len(split_data)):
 
-        event_data, event_len = event_enc(data_seg)
+        data_seg = split_data[i]
+
+        event_data, event_len = event_enc(data_seg, i)
         
         track_chunk = (
             MIDI_TRK +
@@ -116,7 +106,6 @@ def encode(file_data, inst):
 
 def convert(file, output, inst):
     midi = encode(file.read_bytes(), inst)
-
     if not output:
         new = file.name
     else:
@@ -150,7 +139,7 @@ def main():
     args = parser.parse_args()
 
     if args.file and args.file.exists():
-        inst = args.inst if args.inst else 1
+        inst = args.inst if args.inst > 1 else 1
 
         if args.encode:
             convert(args.file, args.output, inst)
