@@ -35,7 +35,7 @@ def event_enc(data):
 
         print(f"encoding: {int( (i/len(data)) * 100)}% done", end="\r")
 
-    event_data.extend([0xFF, 0x2F, 0x00])
+    event_data.extend([0x00, 0xFF, 0x2F, 0x00])
 
     event_data = bytes(event_data)
 
