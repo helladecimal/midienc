@@ -16,7 +16,7 @@ def event_enc(data):
         pitch = (data[i]) & 0x7f
         vel = (data[i] >> 7) & 0x01
 
-        #vel = (data[i+1]) if i+1 < len(data) else 0xFF
+        vel = vel if vel == 1 else 63
 
         event_data.extend([
             1,
