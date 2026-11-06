@@ -85,9 +85,10 @@ def encode(file_data, inst):
     split_data = []
 
     if inst > 1:
+        div = len(file_data) // inst
         for i in range(0, inst):
-            div = len(file_data) // inst
-            split_data.append(file_data[0:i*div])
+            end = (i+1)*div if i < inst-1 else len(file_data)
+            split_data.append(file_data[i*div:end])
     else:
         split_data.append(file_data)
 
