@@ -139,7 +139,7 @@ def main():
     parser.add_argument("-d", "--decode", action="store_true")
     parser.add_argument("-o", "--output", type=Path)
     parser.add_argument("-I", "--inst", type=int)
-    parser.add_argument("-d", "--delta", type=int)
+    parser.add_argument("-l", "--delta", type=int)
 
     args = parser.parse_args()
 
