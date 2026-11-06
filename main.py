@@ -51,7 +51,7 @@ def decode(file_data):
 
     for i in range(0, len(event_data)):
         bytecheck = []
-        if i+1 < len(event_data):
+        if i+2 < len(event_data):
             bytecheck = [
                 event_data[i],
                 event_data[i+1]
@@ -60,6 +60,7 @@ def decode(file_data):
         if bytecheck == [0x00, 0xc0]:
             event_data.pop(i)
             event_data.pop(i+1)
+            event_data.pop(i+2)
 
     for i in range(0, len(event_data), 4):
 
