@@ -84,9 +84,12 @@ def encode(file_data, inst):
 
     split_data = []
 
-    for i in range(0, inst):
-        div = len(file_data) // inst
-        split_data.append(file_data[0:i*div])
+    if inst > 1:
+        for i in range(0, inst):
+            div = len(file_data) // inst
+            split_data.append(file_data[0:i*div])
+    else:
+        split_data.append(file_data)
 
     for i in range(len(split_data)):
 
@@ -139,7 +142,7 @@ def main():
     args = parser.parse_args()
 
     if args.file and args.file.exists():
-        inst = args.inst if args.inst > 1 else 1
+        inst = args.inst if args.inst else 1
 
         if args.encode:
             convert(args.file, args.output, inst)
