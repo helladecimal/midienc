@@ -22,7 +22,7 @@ def event_enc(data, chan, delta):
             1,
             0x90 | chan,
             pitch,
-            vel * 64 if vel > 32 else vel
+            vel * 64 if vel == 1 else vel
         ])
         
 
