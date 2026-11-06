@@ -160,6 +160,8 @@ def main():
             inst = args.inst if args.inst else 1
             delta = args.delta if args.delta else 5
 
+            inst = 65535 if inst > 65535 else inst
+
             convert(args.file, args.output, inst, delta)
         if args.decode:
             if args.file.name[-4:] == ".mid":
