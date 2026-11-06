@@ -16,13 +16,13 @@ def event_enc(data, chan, delta):
         pitch = (data[i]) & 0x7f
         vel = (data[i] >> 7) & 0x01
 
-        vel = vel if vel == 1 else 63
+        vel = vel if vel == 1 else 32
 
         event_data.extend([
             1,
             0x90 | chan,
             pitch,
-            vel * 0x7F if vel > 64 else vel
+            vel * 64 if vel > 32 else vel
         ])
         
 
@@ -33,8 +33,9 @@ def event_enc(data, chan, delta):
             0x00
         ])
 
-        print(f"encoding: {int( (i/len(data)) * 100)}% done", end="\r")
-
+        print(f"encoding track {chan+1}: {int( (i/len(data)) * 100)}% done", end="\r")
+    
+    print("")
     event_data.extend([0x00, 0xFF, 0x2F, 0x00])
 
     event_data = bytes(event_data)
@@ -58,16 +59,15 @@ def decode(file_data):
         pitch = (event_data[i+2])
         vel = (event_data[i+3])
 
-        bit8 = 1 if vel > 64 else 0
+        bit8 = 1 if vel > 32 else 0
 
         if note_stat == 0x90: # note on
             decoded_data.append((pitch | (bit8 << 7)))
 
         print(f"decoding: {int((i/len(file_data)) * 100)}% done", end="\r")
-        print("")
-
+    print("")
     decoded_data = bytes(decoded_data)
-
+    
     return decoded_data
 
 def encode(file_data, inst, delta):
