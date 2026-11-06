@@ -131,7 +131,7 @@ def convert(file, output, inst, delta):
         f.write(midi)
     print("done converting")
 
-def revert(file, output, inst):
+def revert(file, output):
     data = decode(file.read_bytes())
 
     if not output:
@@ -156,14 +156,14 @@ def main():
     args = parser.parse_args()
 
     if args.file and args.file.exists():
-        inst = args.inst if args.inst else 1
-        delta = args.delta if args.delta else 5
-
         if args.encode:
+            inst = args.inst if args.inst else 1
+            delta = args.delta if args.delta else 5
+
             convert(args.file, args.output, inst, delta)
         if args.decode:
             if args.file.name[-4:] == ".mid":
-                revert(args.file, args.output, inst)
+                revert(args.file, args.output)
             else:
                 print("file is not a midi file")
     else:
