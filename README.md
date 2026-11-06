@@ -40,11 +40,19 @@
 
 ## usage
 
+```
+args: --encode (-e), --decode (-d), --output (-o), --inst (-I), --delta (-l)
+```
+
 ### file -> .mid
 ```
 midi-enc -e (file) # will return filename.type.mid
 
 midi-enc -e (file) -o midifile # will return midifile.mid
+
+midi-enc -e (file) -o midifile -I 8 # will return midifile.mid with 8 instruments 
+
+midi-enc -e (file) -o midifile -I 8 -l 100 # will return midifile.mid with 8 instruments with a note delta time of 100 ms
 ```
 
 ### .mid -> file

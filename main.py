@@ -1,50 +1,66 @@
 import hashlib, math, struct
 from pathlib import Path
 import argparse
+import random
 
 MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
 
-def event_enc(data):
+def event_enc(data, chan, delta):
     event_data = bytearray()
+
+    event_data.extend([0x00, 0xC0 | chan, random.randint(0, 119)]) 
     
     for i in range(0, len(data)):
 
         pitch = (data[i]) & 0x7f
         vel = (data[i] >> 7) & 0x01
 
-        #vel = (data[i+1]) if i+1 < len(data) else 0xFF
+        vel = vel if vel == 1 else 32
 
         event_data.extend([
             1,
-            0x90,
+            0x90 | chan,
             pitch,
-            vel * 0x7F
+            vel * 64 if vel == 1 else vel
         ])
         
 
         event_data.extend([
-            1,
-            0x80,
+            delta,
+            0x80 | chan,
             pitch,
             0x00
         ])
 
-        print(f"{int( (i/len(data)) * 100)}% done", end="\r")
-
-    event_data.extend([0xFF, 0x2F, 0x00])
+        print(f"encoding track {chan+1}: {int( (i/len(data)) * 100)}% done", end="\r")
+    
+    print("")
+    event_data.extend([0x00, 0xFF, 0x2F, 0x00])
 
     event_data = bytes(event_data)
 
     event_len = len(event_data)
     return event_data, event_len
 
-def decode(file_data):
-    # 4 byte header + 4 length + 6 format + 4 ascii + 4 byte
-    event_data = file_data[22:]
-    event_data = event_data[:len(event_data)-3] # 3 byte eof
 
+def decode(file_data):
+    # 4 byte header + 4 length + 2 format + 2 tracks + 2 div + 4 ascii + 4 byte
+    tracks = int.from_bytes(file_data[10:12], "big", signed=False)
+    #event_data = file_data[22:]
+    #event_data = event_data[3:len(event_data)-4] # program change, 4 byte eof
+    event_data = bytearray()
     decoded_data = bytearray()
+
+    trk_start = 14
+    for i in range(tracks):
+        length = int.from_bytes(file_data[trk_start+4:trk_start+8], "big", signed=False)
+        event_data.extend(
+            file_data[trk_start+11:trk_start+4+length]
+        )
+        trk_start += 8+length
+
+
 
     for i in range(0, len(event_data), 4):
 
@@ -55,40 +71,57 @@ def decode(file_data):
         pitch = (event_data[i+2])
         vel = (event_data[i+3])
 
-        bit8 = 1 if vel > 64 else 0
+        bit8 = 1 if vel > 32 else 0
 
-        if note_stat == 0x90: # note on
+        if (note_stat & 0xF0) == 0x90: # note on for any channel
             decoded_data.append((pitch | (bit8 << 7)))
 
-        print(f"{int((i/len(file_data)) * 100)}% done", end="\r")
-
+        print(f"decoding: {int((i/len(file_data)) * 100)}% done", end="\r")
+    print("")
     decoded_data = bytes(decoded_data)
-
+    
     return decoded_data
 
-def encode(file_data):
-
-    event_data, event_len = event_enc(file_data)
+def encode(file_data, inst, delta):
 
     header_chunk = (
-        MIDI_HEADER + 
+        MIDI_HEADER +
         (6).to_bytes(4, "big", signed=False) + # length
-        (0).to_bytes(2, "big", signed=False) + # format
-        (1).to_bytes(2, "big", signed=False) + # tracks
+        (0 if inst <= 1 else 1).to_bytes(2, "big", signed=False) + # format
+        (inst).to_bytes(2, "big", signed=False) + # tracks
         (200).to_bytes(2, "big", signed=False) # ticks per beat
     )
-    
-    track_chunk = (
-        MIDI_TRK + 
-        (event_len).to_bytes(4, "big", signed=False) + 
-        event_data 
-    )
 
-    return header_chunk + track_chunk
+    total_track = b""
 
-def convert(file, output):
-    midi = encode(file.read_bytes())
+    split_data = []
 
+    if inst > 1:
+        div = len(file_data) // inst
+        for i in range(0, inst):
+            end = (i+1)*div if i < inst-1 else len(file_data)
+            split_data.append(file_data[i*div:end])
+    else:
+        split_data.append(file_data)
+
+    for i in range(len(split_data)):
+
+        data_seg = split_data[i]
+
+        event_data, event_len = event_enc(data_seg, i, delta)
+        
+        track_chunk = (
+            MIDI_TRK +
+            (event_len).to_bytes(4, "big", signed=False) +
+            event_data 
+        )
+
+        total_track += track_chunk
+
+    return header_chunk + total_track
+
+def convert(file, output, inst, delta):
+    midi = encode(file.read_bytes(), inst, delta)
     if not output:
         new = file.name
     else:
@@ -117,12 +150,19 @@ def main():
     parser.add_argument("-e", "--encode", action="store_true")
     parser.add_argument("-d", "--decode", action="store_true")
     parser.add_argument("-o", "--output", type=Path)
+    parser.add_argument("-I", "--inst", type=int)
+    parser.add_argument("-l", "--delta", type=int)
 
     args = parser.parse_args()
 
     if args.file and args.file.exists():
         if args.encode:
-            convert(args.file, args.output)
+            inst = args.inst if args.inst else 1
+            delta = args.delta if args.delta else 5
+
+            inst = 65535 if inst > 65535 else inst
+
+            convert(args.file, args.output, inst, delta)
         if args.decode:
             if args.file.name[-4:] == ".mid":
                 revert(args.file, args.output)
