@@ -54,11 +54,12 @@ def decode(file_data):
 
     trk_start = 14
     for i in range(tracks):
-        len = int.from_bytes(file_data[trk_start+4:trk_start+8], "big", signed=False)
-        event_data.append(
-            file_data[trk_start+11:trk_start+4+len]
+        length = int.from_bytes(file_data[trk_start+4:trk_start+8], "big", signed=False)
+        event_data.extend(
+            file_data[trk_start+11:trk_start+4+length]
         )
-        trk_start += 8+len
+        trk_start += 8+length
+
 
 
     for i in range(0, len(event_data), 4):
