@@ -33,7 +33,7 @@ def event_enc(data):
             0x00
         ])
 
-        print(f"{int( (i/len(data)) * 100)}% done", end="\r")
+        print(f"encoding: {int( (i/len(data)) * 100)}% done", end="\r")
 
     event_data.extend([0xFF, 0x2F, 0x00])
 
@@ -75,7 +75,7 @@ def decode(file_data):
         if note_stat == 0x90: # note on
             decoded_data.append((pitch | (bit8 << 7)))
 
-        print(f"{int((i/len(file_data)) * 100)}% done", end="\r")
+        print(f"decoding: {int((i/len(file_data)) * 100)}% done", end="\r")
 
     decoded_data = bytes(decoded_data)
 
@@ -83,15 +83,15 @@ def decode(file_data):
 
 def encode(file_data, inst):
 
-    header_chunk = [
-        MIDI_HEADER,
-        (6).to_bytes(4, "big", signed=False), # length
-        (0 if inst <= 1 else 1).to_bytes(2, "big", signed=False), # format
-        (inst).to_bytes(2, "big", signed=False), # tracks
+    header_chunk = (
+        MIDI_HEADER +
+        (6).to_bytes(4, "big", signed=False) + # length
+        (0 if inst <= 1 else 1).to_bytes(2, "big", signed=False) + # format
+        (inst).to_bytes(2, "big", signed=False) + # tracks
         (200).to_bytes(2, "big", signed=False) # ticks per beat
-    ]
+    )
 
-    total_track = []
+    total_track = b""
 
     split_data = []
 
@@ -109,9 +109,9 @@ def encode(file_data, inst):
             event_data 
         ]
 
-        total_track.append(track_chunk)
+        total_track += track_chunk
 
-    return bytes(header_chunk) + bytes(total_track)
+    return header_chunk + total_track
 
 def convert(file, output, inst):
     midi = encode(file.read_bytes(), inst)
