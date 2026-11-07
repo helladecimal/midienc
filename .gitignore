@@ -5,3 +5,4 @@ midi_enc.egg-info/
 build/
 dist/
 README.md.mid
+main.spec

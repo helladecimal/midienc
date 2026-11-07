@@ -2,6 +2,7 @@ import hashlib, math, struct
 from pathlib import Path
 import argparse
 import random
+import zlib
 
 MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
@@ -79,7 +80,8 @@ def decode(file_data):
         print(f"decoding: {int((i/len(file_data)) * 100)}% done", end="\r")
     print("")
     decoded_data = bytes(decoded_data)
-    
+
+    decoded_data = zlib.decompress(decoded_data)
     return decoded_data
 
 def encode(file_data, inst, delta):
@@ -91,6 +93,8 @@ def encode(file_data, inst, delta):
         (inst).to_bytes(2, "big", signed=False) + # tracks
         (200).to_bytes(2, "big", signed=False) # ticks per beat
     )
+
+    file_data = zlib.compress(file_data, 9)
 
     total_track = b""
 

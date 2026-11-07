@@ -6,15 +6,13 @@
 </div>
 
 > [!NOTE]  
-> [midi files generated with this program *may* not run on certain midi players](#compatibility)
+> [midi files generated with this program *have a very very very slight chance* of not running on certain midi players](#compatibility)
 
-> [!WARNING]  
-> this is not compression by any means.  
-> generated files can be way bigger than the original.   
-> demo file increased by 9x (1.1 mb -> 8.99 mb).  
-> basically, just dont try anything bigger than a few megabytes...  
+> [!NOTE]  
+> compression has been added, but generated files are still bigger than the original by about 2x.  
+> with compression, i'd say not to decode anything larger than 10 mb.
 >  
-> also please dont treat this like a secure encryption method..........
+> please dont treat this like a secure encryption method..........
 
 ## faq
 
