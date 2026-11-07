@@ -72,11 +72,11 @@ as an example, try to decode the `decode-me.txt.mid` file in the repo!
 
 | platform | compatibility |  
 |----------|---------------|
+|windows media player| ✅ |  
+| VLC | ✅  
 | midis2jam2 | ✅ (on the latest version)
 | most web players | ✅
 | midijam | ❔
-| VLC | ❔
-|windows media player| ❌|  
 </div>
 
 
