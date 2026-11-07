@@ -80,7 +80,7 @@ def decode(file_data):
         print(f"decoding: {int((i/len(file_data)) * 100)}% done", end="\r")
     print("")
     decoded_data = bytes(decoded_data)
-    
+
     decoded_data = zlib.decompress(decoded_data)
     return decoded_data
 
@@ -94,7 +94,7 @@ def encode(file_data, inst, delta):
         (200).to_bytes(2, "big", signed=False) # ticks per beat
     )
 
-    zlib.compress(file_data, 9)
+    file_data = zlib.compress(file_data, 9)
 
     total_track = b""
 
