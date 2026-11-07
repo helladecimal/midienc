@@ -2,6 +2,7 @@ import hashlib, math, struct
 from pathlib import Path
 import argparse
 import random
+import zlib
 
 MIDI_HEADER = b"MThd"
 MIDI_TRK = b"MTrk"
