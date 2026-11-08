@@ -9,8 +9,9 @@ MIDI_TRK = b"MTrk"
 
 def event_enc(data, chan, delta):
     event_data = bytearray()
+    rng = random.Random(zlib.crc32(data))
 
-    event_data.extend([0x00, 0xC0 | chan, random.randint(0, 119)]) 
+    event_data.extend([0x00, 0xC0 | chan, rng.randint(0, 119)]) 
     
     for i in range(0, len(data)):
 
