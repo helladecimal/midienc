@@ -45,7 +45,7 @@ def event_enc(data, chan, delta):
     return event_data, event_len
 
 
-def decode(file_data):
+def decode(file_data: bytearray):
     # 4 byte header + 4 length + 2 format + 2 tracks + 2 div + 4 ascii + 4 byte
     tracks = int.from_bytes(file_data[10:12], "big", signed=False)
     #event_data = file_data[22:]
@@ -85,7 +85,7 @@ def decode(file_data):
     try:
         decoded_data = zlib.decompress(decoded_data)
     except zlib.error:
-        decoded_data = decoded_data
+        decoded_data = b"MidiEnc" + file_data
     return decoded_data
 
 def encode(file_data, inst, delta):
@@ -97,6 +97,9 @@ def encode(file_data, inst, delta):
         (inst).to_bytes(2, "big", signed=False) + # tracks
         (200).to_bytes(2, "big", signed=False) # ticks per beat
     )
+
+    if file_data[:7] == b"MidiEnc":
+        return file_data[7:]
 
     file_data = zlib.compress(file_data, 9)
 
