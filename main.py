@@ -81,7 +81,11 @@ def decode(file_data):
     print("")
     decoded_data = bytes(decoded_data)
 
-    decoded_data = zlib.decompress(decoded_data)
+    #decoded_data = zlib.decompress(decoded_data)
+    try:
+        decoded_data = zlib.decompress(decoded_data)
+    except zlib.error:
+        decoded_data = decoded_data
     return decoded_data
 
 def encode(file_data, inst, delta):
